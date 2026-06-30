@@ -1,10 +1,12 @@
 <script setup>
 import MenuBar from '@/components/layout/MenuBar.vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
+import NewProjectDialog from '@/components/dialogs/NewProjectDialog.vue'
 </script>
 
 <template>
   <div class="app-shell">
+    <NewProjectDialog />
     <MenuBar class="app-menubar" />
     <Sidebar class="app-sidebar" />
     <main class="app-editor">

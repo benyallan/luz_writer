@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -64,6 +66,32 @@ func (a *App) ReadDirectory(dirPath string) []FileNode {
 	})
 
 	return nodes
+}
+
+func (a *App) GetHomeDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return home
+}
+
+func (a *App) CreateProject(name, parentPath string) (string, error) {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return "", fmt.Errorf("o nome do projeto não pode estar vazio")
+	}
+	if strings.ContainsAny(name, `/\:*?"<>|`) {
+		return "", fmt.Errorf("o nome contém caracteres inválidos")
+	}
+	if name == "." || name == ".." {
+		return "", fmt.Errorf("nome de projeto inválido")
+	}
+	projectPath := filepath.Join(parentPath, name)
+	if err := os.MkdirAll(projectPath, 0o755); err != nil {
+		return "", fmt.Errorf("não foi possível criar o projeto: %w", err)
+	}
+	return projectPath, nil
 }
 
 func (a *App) QuitApp() {

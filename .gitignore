@@ -1,5 +1,6 @@
 # Wails build output
 build/bin
+luz-writer
 
 # Go
 *.exe

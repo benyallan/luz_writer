@@ -1,6 +1,7 @@
 # Wails build output
 build/bin
 luz-writer
+frontend/package.json.md5
 
 # Go
 *.exe

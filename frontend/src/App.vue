@@ -2,6 +2,10 @@
 import MenuBar from '@/components/layout/MenuBar.vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import NewProjectDialog from '@/components/dialogs/NewProjectDialog.vue'
+import FileEditor from '@/components/editor/FileEditor.vue'
+import { useEditorStore } from '@/stores/editor'
+
+const editor = useEditorStore()
 </script>
 
 <template>
@@ -10,8 +14,9 @@ import NewProjectDialog from '@/components/dialogs/NewProjectDialog.vue'
     <MenuBar class="app-menubar" />
     <Sidebar class="app-sidebar" />
     <main class="app-editor">
-      <div class="editor-welcome">
-        <p>Abra uma pasta para começar</p>
+      <FileEditor v-if="editor.filePath" />
+      <div v-else class="editor-welcome">
+        <p>Selecione um arquivo para editar</p>
       </div>
     </main>
   </div>
@@ -41,16 +46,18 @@ import NewProjectDialog from '@/components/dialogs/NewProjectDialog.vue'
   grid-column: 2;
   grid-row: 2;
   background: var(--color-bg);
-  overflow: auto;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
 .editor-welcome {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--color-text-muted);
-  text-align: center;
-  pointer-events: none;
   user-select: none;
+  pointer-events: none;
 }
 </style>

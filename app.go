@@ -231,6 +231,21 @@ func (a *App) CreateProject(name, parentPath string) (string, error) {
 	return projectPath, nil
 }
 
+func (a *App) ReadFile(filePath string) (string, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", fmt.Errorf("não foi possível ler o arquivo: %w", err)
+	}
+	return string(data), nil
+}
+
+func (a *App) SaveFile(filePath, content string) error {
+	if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
+		return fmt.Errorf("não foi possível salvar o arquivo: %w", err)
+	}
+	return nil
+}
+
 func (a *App) QuitApp() {
 	runtime.Quit(a.ctx)
 }

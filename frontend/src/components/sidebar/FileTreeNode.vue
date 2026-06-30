@@ -7,6 +7,7 @@ import {
 } from '@lucide/vue'
 import { CreateFile, CreateDirectory } from '@wails/go/main/App'
 import { useWorkspaceStore } from '@/stores/workspace'
+import { useEditorStore } from '@/stores/editor'
 
 defineOptions({ name: 'FileTreeNode' })
 
@@ -16,6 +17,7 @@ const props = defineProps({
 })
 
 const workspace = useWorkspaceStore()
+const editor = useEditorStore()
 const isOpen = ref(false)
 const children = ref([])
 const isLoaded = ref(false)
@@ -33,6 +35,7 @@ async function toggle() {
 
 function select() {
   workspace.setActiveFile(props.node.path)
+  editor.openFile(props.node.path)
 }
 
 async function startCreating(type) {

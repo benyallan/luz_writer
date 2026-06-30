@@ -201,6 +201,15 @@ func (a *App) CreateProject(name, parentPath string) (string, error) {
 	if err := os.MkdirAll(projectPath, 0o755); err != nil {
 		return "", fmt.Errorf("não foi possível criar o projeto: %w", err)
 	}
+
+	// Scaffold project structure
+	dirs := []string{".tmp", "dist", "src", "targets"}
+	for _, dir := range dirs {
+		if err := os.Mkdir(filepath.Join(projectPath, dir), 0o755); err != nil {
+			return "", fmt.Errorf("não foi possível criar a pasta %q: %w", dir, err)
+		}
+	}
+
 	return projectPath, nil
 }
 

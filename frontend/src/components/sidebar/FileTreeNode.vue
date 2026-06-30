@@ -1,6 +1,11 @@
 <script setup>
-import { ref } from 'vue'
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText } from '@lucide/vue'
+import { ref, nextTick } from 'vue'
+import {
+  ChevronRight, ChevronDown,
+  Folder, FolderOpen, FileText,
+  FilePlus, FolderPlus,
+} from '@lucide/vue'
+import { CreateFile, CreateDirectory } from '@wails/go/main/App'
 import { useWorkspaceStore } from '@/stores/workspace'
 
 defineOptions({ name: 'FileTreeNode' })
@@ -14,6 +19,9 @@ const workspace = useWorkspaceStore()
 const isOpen = ref(false)
 const children = ref([])
 const isLoaded = ref(false)
+const creatingType = ref(null)   // 'file' | 'folder' | null
+const newItemName = ref('')
+const creatingInput = ref(null)
 
 async function toggle() {
   if (!isLoaded.value) {
@@ -25,6 +33,43 @@ async function toggle() {
 
 function select() {
   workspace.setActiveFile(props.node.path)
+}
+
+async function startCreating(type) {
+  if (!isLoaded.value) {
+    children.value = await workspace.loadChildren(props.node.path)
+    isLoaded.value = true
+  }
+  isOpen.value = true
+  creatingType.value = type
+  newItemName.value = ''
+  await nextTick()
+  creatingInput.value?.focus()
+}
+
+function cancelCreate() {
+  creatingType.value = null
+  newItemName.value = ''
+}
+
+async function confirmCreate() {
+  const name = newItemName.value.trim()
+  if (!name) { cancelCreate(); return }
+
+  const type = creatingType.value
+  creatingType.value = null   // clear before await so blur doesn't double-fire
+  newItemName.value = ''
+
+  try {
+    if (type === 'file') {
+      await CreateFile(props.node.path, name)
+    } else {
+      await CreateDirectory(props.node.path, name)
+    }
+    children.value = await workspace.loadChildren(props.node.path)
+  } catch (e) {
+    console.error(e)
+  }
 }
 </script>
 
@@ -47,6 +92,15 @@ function select() {
       <FolderOpen v-if="isOpen" :size="16" class="tree-icon icon-folder" />
       <Folder v-else :size="16" class="tree-icon icon-folder" />
       <span class="tree-label">{{ node.name }}</span>
+
+      <span class="row-actions">
+        <button class="action-btn" title="Novo arquivo" @click.stop="startCreating('file')">
+          <FilePlus :size="14" />
+        </button>
+        <button class="action-btn" title="Nova pasta" @click.stop="startCreating('folder')">
+          <FolderPlus :size="14" />
+        </button>
+      </span>
     </div>
 
     <!-- File row -->
@@ -64,6 +118,25 @@ function select() {
 
     <!-- Children -->
     <template v-if="isOpen && node.isDir">
+      <!-- Inline creating input -->
+      <div
+        v-if="creatingType"
+        class="tree-row creating-row"
+        :style="{ paddingLeft: `${(depth + 1) * 20 + 22}px` }"
+      >
+        <Folder v-if="creatingType === 'folder'" :size="16" class="tree-icon icon-folder" />
+        <FileText v-else :size="16" class="tree-icon icon-file" />
+        <input
+          ref="creatingInput"
+          v-model="newItemName"
+          class="creating-input"
+          type="text"
+          @keydown.enter.prevent="confirmCreate"
+          @keydown.escape="cancelCreate"
+          @blur="cancelCreate"
+        />
+      </div>
+
       <FileTreeNode
         v-for="child in children"
         :key="child.path"
@@ -81,10 +154,7 @@ function select() {
   gap: 4px;
   height: 22px;
   cursor: pointer;
-  border-radius: 0;
-  padding-right: 8px;
-  white-space: nowrap;
-  overflow: hidden;
+  padding-right: 4px;
 }
 
 .tree-row:hover {
@@ -94,6 +164,11 @@ function select() {
 .tree-row.is-active {
   background: var(--color-active);
   color: var(--color-active-text);
+}
+
+.tree-row.creating-row {
+  cursor: default;
+  background: transparent;
 }
 
 .tree-chevron {
@@ -109,17 +184,43 @@ function select() {
   flex-shrink: 0;
 }
 
-.icon-folder {
-  color: var(--color-folder);
-}
-
-.icon-file {
-  color: var(--color-file);
-}
+.icon-folder { color: var(--color-folder); }
+.icon-file   { color: var(--color-file); }
 
 .tree-label {
+  flex: 1;
   font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.row-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.tree-row:hover .row-actions {
+  opacity: 1;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  color: var(--color-text-muted);
+  transition: background 0.1s, color 0.1s;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
 }
 </style>

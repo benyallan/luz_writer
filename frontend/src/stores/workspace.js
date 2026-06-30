@@ -31,6 +31,12 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     activeFilePath.value = path
   }
 
+  async function refreshRoot() {
+    if (rootPath.value) {
+      rootNodes.value = await ReadDirectory(rootPath.value)
+    }
+  }
+
   function newProject() {
     isNewProjectDialogOpen.value = true
   }
@@ -43,6 +49,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     isNewProjectDialogOpen,
     openFolder,
     openAt,
+    refreshRoot,
     loadChildren,
     setActiveFile,
     newProject,

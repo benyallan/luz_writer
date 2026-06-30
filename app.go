@@ -68,6 +68,50 @@ func (a *App) ReadDirectory(dirPath string) []FileNode {
 	return nodes
 }
 
+func validateItemName(name string) error {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return fmt.Errorf("o nome não pode estar vazio")
+	}
+	if strings.ContainsAny(name, `/\:*?"<>|`) {
+		return fmt.Errorf("o nome contém caracteres inválidos")
+	}
+	if name == "." || name == ".." {
+		return fmt.Errorf("nome inválido")
+	}
+	return nil
+}
+
+func (a *App) CreateFile(parentPath, name string) (string, error) {
+	if err := validateItemName(name); err != nil {
+		return "", err
+	}
+	filePath := filepath.Join(parentPath, strings.TrimSpace(name))
+	f, err := os.OpenFile(filePath, os.O_CREATE|os.O_EXCL, 0o644)
+	if err != nil {
+		if os.IsExist(err) {
+			return "", fmt.Errorf("já existe um arquivo com esse nome")
+		}
+		return "", fmt.Errorf("não foi possível criar o arquivo: %w", err)
+	}
+	f.Close()
+	return filePath, nil
+}
+
+func (a *App) CreateDirectory(parentPath, name string) (string, error) {
+	if err := validateItemName(name); err != nil {
+		return "", err
+	}
+	dirPath := filepath.Join(parentPath, strings.TrimSpace(name))
+	if err := os.Mkdir(dirPath, 0o755); err != nil {
+		if os.IsExist(err) {
+			return "", fmt.Errorf("já existe uma pasta com esse nome")
+		}
+		return "", fmt.Errorf("não foi possível criar a pasta: %w", err)
+	}
+	return dirPath, nil
+}
+
 func (a *App) GetHomeDir() string {
 	home, err := os.UserHomeDir()
 	if err != nil {

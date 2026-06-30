@@ -49,3 +49,18 @@ button {
   background: none;
   color: inherit;
 }
+
+/* Shared: inline name input inside the file tree */
+.creating-input {
+  flex: 1;
+  background: #3c3c3c;
+  border: 1px solid var(--color-accent);
+  color: var(--color-text);
+  font-size: 13px;
+  font-family: inherit;
+  padding: 1px 4px;
+  height: 18px;
+  outline: none;
+  min-width: 0;
+  border-radius: 1px;
+}

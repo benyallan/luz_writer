@@ -2,26 +2,70 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// App struct
 type App struct {
 	ctx context.Context
 }
 
-// NewApp creates a new App application struct
+type FileNode struct {
+	Name  string `json:"name"`
+	Path  string `json:"path"`
+	IsDir bool   `json:"isDir"`
+}
+
 func NewApp() *App {
 	return &App{}
 }
 
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+func (a *App) OpenFolder() string {
+	path, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Abrir pasta",
+	})
+	if err != nil {
+		return ""
+	}
+	return path
+}
+
+func (a *App) ReadDirectory(dirPath string) []FileNode {
+	entries, err := os.ReadDir(dirPath)
+	if err != nil {
+		return []FileNode{}
+	}
+
+	var nodes []FileNode
+	for _, entry := range entries {
+		if entry.Name()[0] == '.' {
+			continue
+		}
+		nodes = append(nodes, FileNode{
+			Name:  entry.Name(),
+			Path:  filepath.Join(dirPath, entry.Name()),
+			IsDir: entry.IsDir(),
+		})
+	}
+
+	// Directories first, then files, each group sorted alphabetically
+	sort.Slice(nodes, func(i, j int) bool {
+		if nodes[i].IsDir != nodes[j].IsDir {
+			return nodes[i].IsDir
+		}
+		return nodes[i].Name < nodes[j].Name
+	})
+
+	return nodes
+}
+
+func (a *App) QuitApp() {
+	runtime.Quit(a.ctx)
 }

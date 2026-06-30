@@ -1,21 +1,54 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'</script>
+import MenuBar from '@/components/layout/MenuBar.vue'
+import Sidebar from '@/components/layout/Sidebar.vue'
+</script>
 
 <template>
-  <img id="logo" alt="Wails logo" src="./assets/images/logo-universal.png"/>
-  <HelloWorld/>
+  <div class="app-shell">
+    <MenuBar class="app-menubar" />
+    <Sidebar class="app-sidebar" />
+    <main class="app-editor">
+      <div class="editor-welcome">
+        <p>Abra uma pasta para começar</p>
+      </div>
+    </main>
+  </div>
 </template>
 
-<style>
-#logo {
-  display: block;
-  width: 50%;
-  height: 50%;
-  margin: auto;
-  padding: 10% 0 0;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-origin: content-box;
+<style scoped>
+.app-shell {
+  display: grid;
+  grid-template-rows: var(--menubar-height) 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-menubar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.app-sidebar {
+  grid-column: 1;
+  grid-row: 2;
+  overflow: hidden;
+}
+
+.app-editor {
+  grid-column: 2;
+  grid-row: 2;
+  background: var(--color-bg);
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-welcome {
+  color: var(--color-text-muted);
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
 }
 </style>

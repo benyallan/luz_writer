@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -19,6 +20,71 @@ type FileNode struct {
 	Name  string `json:"name"`
 	Path  string `json:"path"`
 	IsDir bool   `json:"isDir"`
+}
+
+type RecentProject struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
+}
+
+const maxRecents = 7
+
+func recentsFilePath() (string, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+	dir := filepath.Join(configDir, "luz-writer")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "recents.json"), nil
+}
+
+func (a *App) GetRecentProjects() []RecentProject {
+	p, err := recentsFilePath()
+	if err != nil {
+		return []RecentProject{}
+	}
+	data, err := os.ReadFile(p)
+	if err != nil {
+		return []RecentProject{}
+	}
+	var projects []RecentProject
+	if err := json.Unmarshal(data, &projects); err != nil {
+		return []RecentProject{}
+	}
+	return projects
+}
+
+func (a *App) AddRecentProject(projectPath string) {
+	current := a.GetRecentProjects()
+	entry := RecentProject{Name: filepath.Base(projectPath), Path: projectPath}
+
+	updated := []RecentProject{entry}
+	for _, r := range current {
+		if r.Path != projectPath {
+			updated = append(updated, r)
+		}
+	}
+	if len(updated) > maxRecents {
+		updated = updated[:maxRecents]
+	}
+
+	p, err := recentsFilePath()
+	if err != nil {
+		return
+	}
+	data, _ := json.Marshal(updated)
+	os.WriteFile(p, data, 0o644)
+}
+
+func (a *App) ClearRecentProjects() {
+	p, err := recentsFilePath()
+	if err != nil {
+		return
+	}
+	os.WriteFile(p, []byte("[]"), 0o644)
 }
 
 func NewApp() *App {

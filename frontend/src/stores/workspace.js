@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { OpenFolder, ReadDirectory } from '@wails/go/main/App'
+import { OpenFolder, ReadDirectory, AddRecentProject } from '@wails/go/main/App'
 
 export const useWorkspaceStore = defineStore('workspace', () => {
   const rootPath = ref(null)
@@ -21,6 +21,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
   async function openAt(path) {
     rootPath.value = path
     rootNodes.value = await ReadDirectory(path)
+    AddRecentProject(path)  // fire-and-forget, no await needed
   }
 
   async function loadChildren(dirPath) {

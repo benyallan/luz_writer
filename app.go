@@ -113,9 +113,6 @@ func (a *App) ReadDirectory(dirPath string) []FileNode {
 
 	var nodes []FileNode
 	for _, entry := range entries {
-		if entry.Name()[0] == '.' {
-			continue
-		}
 		nodes = append(nodes, FileNode{
 			Name:  entry.Name(),
 			Path:  filepath.Join(dirPath, entry.Name()),
@@ -208,6 +205,11 @@ func (a *App) CreateProject(name, parentPath string) (string, error) {
 		if err := os.Mkdir(filepath.Join(projectPath, dir), 0o755); err != nil {
 			return "", fmt.Errorf("não foi possível criar a pasta %q: %w", dir, err)
 		}
+	}
+
+	gitignore := ".tmp/\ndist/\n"
+	if err := os.WriteFile(filepath.Join(projectPath, ".gitignore"), []byte(gitignore), 0o644); err != nil {
+		return "", fmt.Errorf("não foi possível criar o .gitignore: %w", err)
 	}
 
 	return projectPath, nil

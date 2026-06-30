@@ -20,30 +20,73 @@ O escritor nunca toca LaTeX. Ele escreve em uma interface WYSIWYG rica. O backen
 - Orquestração de compilação LaTeX (via `tectonic` ou `pdflatex` instalado no sistema)
 - Sistema de plugins via interface Go
 
-## Estrutura de diretórios planejada
+## Estrutura do repositório (código-fonte do app)
 
 ```
-luz-writer/
+luz-writer/                  # Raiz do repositório do app
 ├── main.go                  # Entrada Wails
-├── app.go                   # App struct exposta ao frontend
+├── app.go                   # App struct e todos os métodos expostos ao frontend
 ├── internal/
 │   ├── document/            # Modelo de documento, serialização
 │   ├── latex/               # Conversão ProseMirror JSON → LaTeX
 │   ├── compiler/            # Invocação do compilador LaTeX
 │   ├── plugin/              # Runtime de plugins
-│   └── config/              # Configurações de usuário/projeto
+│   └── config/              # Configurações de usuário/app
 ├── frontend/
 │   ├── src/
-│   │   ├── editor/          # Extensões Tiptap customizadas
-│   │   ├── components/      # Componentes UI (Reka UI)
-│   │   ├── panels/          # Painéis (estrutura, estilos, config)
-│   │   ├── stores/          # Pinia stores
-│   │   └── plugins/         # Sistema de plugins frontend
-│   └── wailsjs/             # Gerado pelo Wails (bindings Go→JS)
+│   │   ├── components/
+│   │   │   ├── layout/      # Shell do app (MenuBar, Sidebar)
+│   │   │   ├── sidebar/     # FileTree, FileTreeNode
+│   │   │   └── dialogs/     # Modais (NewProjectDialog, ...)
+│   │   ├── stores/          # Pinia stores (workspace.js, ...)
+│   │   ├── editor/          # Extensões Tiptap customizadas (a criar)
+│   │   └── panels/          # Painéis laterais/inferiores (a criar)
+│   └── wailsjs/             # Gerado pelo Wails — NÃO editar à mão exceto App.js/App.d.ts/models.ts
 ├── build/                   # Assets de build (ícones, manifests)
 └── .claude/
     └── commands/            # Skills deste projeto
 ```
+
+## Estrutura de um projeto do escritor (criado pelo app)
+
+Quando o usuário cria um novo projeto pelo Luz Writer, a seguinte estrutura é
+gerada em disco. Toda a lógica de scaffold está em `app.go → CreateProject`.
+
+```
+meu-livro/                   # Pasta raiz escolhida pelo usuário
+├── src/                     # CONTEÚDO — arquivos que o escritor edita
+│   │                        # Capítulos, seções, artigos em formato próprio
+│   │                        # do Luz Writer (JSON ProseMirror salvo em .lwx ou similar)
+│   └── (capítulos, partes)
+│
+├── targets/                 # PERFIS DE COMPILAÇÃO
+│   │                        # Cada arquivo descreve um destino de saída:
+│   │                        # classe LaTeX, margens, fonte, tamanho de página,
+│   │                        # pacotes extras, metadados (título, autor, ISBN…)
+│   │                        # Exemplos: livro-a5.toml, ebook.toml, artigo-abnt.toml
+│   └── (perfis .toml ou similar)
+│
+├── dist/                    # SAÍDA — arquivos gerados (não versionar)
+│   │                        # PDFs compilados, EPUBs, HTML exportados
+│   │                        # Sobrescrito a cada compilação; o usuário não edita aqui
+│   └── (PDFs, EPUBs…)
+│
+├── .tmp/                    # TEMPORÁRIOS de compilação (não versionar)
+│   │                        # Arquivos .tex gerados, .aux, .log, fontes baixadas
+│   │                        # pelo Tectonic, cache de compilação incremental
+│   │                        # Pode ser apagado a qualquer momento sem perda
+│   └── (artefatos LaTeX)
+│
+└── .gitignore               # Gerado automaticamente; exclui .tmp/ e dist/
+```
+
+### Regras sobre o projeto do escritor
+
+- **Nunca ler nem escrever em `dist/` diretamente** — é território exclusivo do compilador.
+- **`.tmp/` é descartável** — o app deve recriá-la se não existir antes de compilar.
+- **`targets/`** define *o quê* compilar e *como*; `src/` define *o conteúdo*. São orthogonais.
+- O formato dos arquivos de `src/` ainda não está definido — candidatos: `.lwx` (JSON ProseMirror), `.md` com front-matter, ou formato binário próprio.
+- O formato dos perfis em `targets/` ainda não está definido — candidato: TOML por ser legível e simples.
 
 ## Modos de exportação LaTeX
 

@@ -1,21 +1,28 @@
 <script setup>
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 import { X } from '@lucide/vue'
 import { useEditorStore } from '@/stores/editor'
 import { useWorkspaceStore } from '@/stores/workspace'
+import RichTextEditor from './RichTextEditor.vue'
 
-const editor = useEditorStore()
+const store = useEditorStore()
 const workspace = useWorkspaceStore()
 
-function handleKeydown(e) {
+const isRichText = computed(() => store.fileName?.endsWith('.luztxt') ?? false)
+
+function onKeydown(e) {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') {
     e.preventDefault()
-    editor.save()
+    store.save()
   }
 }
 
+onMounted(() => window.addEventListener('keydown', onKeydown))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
+
 function close() {
   workspace.setActiveFile(null)
-  editor.close()
+  store.close()
 }
 </script>
 
@@ -24,24 +31,24 @@ function close() {
     <!-- Tab bar -->
     <div class="tab-bar">
       <div class="tab">
-        <span v-if="editor.isDirty" class="dirty-dot" title="Alterações não salvas">●</span>
-        <span class="tab-name">{{ editor.fileName }}</span>
-        <button class="tab-close" title="Fechar (sem salvar)" @click="close">
+        <span v-if="store.isDirty" class="dirty-dot" title="Alterações não salvas">●</span>
+        <span class="tab-name">{{ store.fileName }}</span>
+        <button class="tab-close" title="Fechar" @click="close">
           <X :size="12" />
         </button>
       </div>
     </div>
 
-    <!-- Editor body -->
-    <div class="editor-body">
+    <!-- Editor body: rich text for .luztxt, plain text for everything else -->
+    <RichTextEditor v-if="isRichText" />
+    <div v-else class="editor-body">
       <textarea
-        v-model="editor.content"
+        v-model="store.content"
         class="editor-textarea"
         spellcheck="false"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
-        @keydown="handleKeydown"
       />
     </div>
   </div>
@@ -106,16 +113,14 @@ function close() {
   transition: opacity 0.1s, background 0.1s, color 0.1s;
 }
 
-.tab:hover .tab-close {
-  opacity: 1;
-}
+.tab:hover .tab-close { opacity: 1; }
 
 .tab-close:hover {
   background: rgba(255, 255, 255, 0.12);
   color: var(--color-text);
 }
 
-/* ── Editor body ── */
+/* ── Plain text body ── */
 .editor-body {
   flex: 1;
   overflow: hidden;

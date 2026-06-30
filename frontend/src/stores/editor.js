@@ -31,5 +31,5 @@ export const useEditorStore = defineStore('editor', () => {
     savedContent.value = ''
   }
 
-  return { filePath, content, fileName, isDirty, openFile, save, close }
+  return { filePath, content, savedContent, fileName, isDirty, openFile, save, close }
 })

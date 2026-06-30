@@ -3,14 +3,25 @@
 import {main} from '../models';
 
 export function AddRecentProject(arg1:string):Promise<void>;
+
 export function ClearRecentProjects():Promise<void>;
+
 export function CreateDirectory(arg1:string,arg2:string):Promise<string>;
+
 export function CreateFile(arg1:string,arg2:string):Promise<string>;
+
 export function CreateProject(arg1:string,arg2:string):Promise<string>;
+
 export function GetHomeDir():Promise<string>;
+
 export function GetRecentProjects():Promise<Array<main.RecentProject>>;
+
 export function OpenFolder():Promise<string>;
+
 export function QuitApp():Promise<void>;
+
 export function ReadDirectory(arg1:string):Promise<Array<main.FileNode>>;
+
 export function ReadFile(arg1:string):Promise<string>;
+
 export function SaveFile(arg1:string,arg2:string):Promise<void>;

@@ -82,9 +82,14 @@ async function confirmRootCreate() {
 
       <div v-else class="sidebar-empty">
         <p class="empty-hint">Nenhuma pasta aberta</p>
-        <button class="open-btn" @click="workspace.openFolder">
-          Abrir pasta
-        </button>
+        <div class="empty-actions">
+          <button class="open-btn" @click="workspace.newProject">
+            Novo projeto
+          </button>
+          <button class="open-btn open-btn-secondary" @click="workspace.openFolder">
+            Abrir pasta
+          </button>
+        </div>
       </div>
     </div>
   </aside>
@@ -170,7 +175,16 @@ async function confirmRootCreate() {
   margin-bottom: 12px;
 }
 
+.empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
 .open-btn {
+  width: 100%;
+  max-width: 160px;
   padding: 5px 14px;
   background: var(--color-accent);
   color: #fff;
@@ -181,5 +195,16 @@ async function confirmRootCreate() {
 
 .open-btn:hover {
   background: #1177bb;
+}
+
+.open-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.open-btn-secondary:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
 }
 </style>

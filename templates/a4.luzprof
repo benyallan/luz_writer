@@ -1,0 +1,32 @@
+# Perfil de compilação — Luz Writer
+# Formato: .luzprof (TOML)
+# Edite este arquivo para ajustar as configurações de saída deste destino.
+
+[profile]
+name        = "A4 Padrão"
+description = "PDF para impressão em folhas A4 comuns (210 × 297 mm)"
+version     = "1"
+
+[latex]
+document_class = "article"
+class_options  = ["12pt", "a4paper"]
+language       = "brazil"           # pacote babel; use "english" para inglês
+
+[page]
+paper       = "a4"                  # a4 | a5 | letter | b5
+orientation = "portrait"            # portrait | landscape
+
+[margins]
+top    = "2.5cm"
+bottom = "2.5cm"
+left   = "3cm"                      # margem maior à esquerda para encadernação
+right  = "2cm"
+
+[typography]
+font_size    = "12pt"               # 10pt | 11pt | 12pt
+line_spacing = 1.5                  # 1.0 = simples  1.5 = um e meio  2.0 = duplo
+font_family  = "lmodern"            # lmodern | times | palatino | libertine
+encoding     = "utf8"
+
+[output]
+format = "pdf"                      # pdf | dvi

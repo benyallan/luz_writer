@@ -80,13 +80,47 @@ meu-livro/                   # Pasta raiz escolhida pelo usuário
 └── .gitignore               # Gerado automaticamente; exclui .tmp/ e dist/
 ```
 
+### Extensões de arquivo do projeto
+
+| Extensão | Pasta | Conteúdo |
+|---|---|---|
+| `.luztxt` | `src/` | Arquivo de conteúdo do escritor (formato interno do Luz Writer — JSON ProseMirror, schema a definir) |
+| `.luzprof` | `targets/` | Perfil de compilação em TOML — instrui o compilador sobre classe LaTeX, margens, tipografia e formato de saída |
+
+### Scaffold gerado pelo `CreateProject` (app.go)
+
+```
+meu-livro/
+├── src/
+│   └── meu-livro.luztxt      ← arquivo em branco criado com o nome do projeto
+├── targets/
+│   └── a4.luzprof            ← copiado de templates/a4.luzprof (embutido no binário via go:embed)
+├── dist/                     ← vazio; preenchido pelo compilador
+├── .tmp/                     ← vazio; usado em runtime pelo compilador
+└── .gitignore                ← exclui .tmp/ e dist/
+```
+
+O template `templates/a4.luzprof` fica no repositório e é embutido no binário
+via `//go:embed templates/a4.luzprof` em `app.go`. Para adicionar novos perfis
+padrão, basta criar o arquivo em `templates/` e copiá-lo no `CreateProject`.
+
+### Esquema do `.luzprof` (TOML)
+
+```toml
+[profile]      # metadados do perfil (name, description, version)
+[latex]        # document_class, class_options[], language
+[page]         # paper (a4/a5/letter), orientation (portrait/landscape)
+[margins]      # top, bottom, left, right (valores com unidade: "2.5cm")
+[typography]   # font_size, line_spacing, font_family, encoding
+[output]       # format (pdf/dvi)
+```
+
 ### Regras sobre o projeto do escritor
 
 - **Nunca ler nem escrever em `dist/` diretamente** — é território exclusivo do compilador.
 - **`.tmp/` é descartável** — o app deve recriá-la se não existir antes de compilar.
-- **`targets/`** define *o quê* compilar e *como*; `src/` define *o conteúdo*. São orthogonais.
-- O formato dos arquivos de `src/` ainda não está definido — candidatos: `.lwx` (JSON ProseMirror), `.md` com front-matter, ou formato binário próprio.
-- O formato dos perfis em `targets/` ainda não está definido — candidato: TOML por ser legível e simples.
+- **`targets/`** define *o quê* compilar e *como*; `src/` define *o conteúdo*. São ortogonais.
+- O schema interno do `.luztxt` ainda não está implementado — será JSON ProseMirror quando o editor for integrado.
 
 ## Modos de exportação LaTeX
 

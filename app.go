@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -11,6 +12,9 @@ import (
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
+
+//go:embed templates/a4.luzprof
+var defaultA4Profile []byte
 
 type App struct {
 	ctx context.Context
@@ -205,6 +209,18 @@ func (a *App) CreateProject(name, parentPath string) (string, error) {
 		if err := os.Mkdir(filepath.Join(projectPath, dir), 0o755); err != nil {
 			return "", fmt.Errorf("não foi possível criar a pasta %q: %w", dir, err)
 		}
+	}
+
+	// Default compilation profile
+	profileDst := filepath.Join(projectPath, "targets", "a4.luzprof")
+	if err := os.WriteFile(profileDst, defaultA4Profile, 0o644); err != nil {
+		return "", fmt.Errorf("não foi possível criar o perfil padrão: %w", err)
+	}
+
+	// Blank content file named after the project
+	contentFile := filepath.Join(projectPath, "src", name+".luztxt")
+	if err := os.WriteFile(contentFile, []byte{}, 0o644); err != nil {
+		return "", fmt.Errorf("não foi possível criar o arquivo de conteúdo: %w", err)
 	}
 
 	gitignore := ".tmp/\ndist/\n"

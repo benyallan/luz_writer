@@ -122,11 +122,9 @@ watch(() => store.filePath, () => {
       </div>
     </div>
 
-    <!-- Paper area -->
-    <div class="paper-scroll">
-      <div class="paper">
-        <EditorContent :editor="tiptap" class="paper-content" />
-      </div>
+    <!-- Content area -->
+    <div class="content-area">
+      <EditorContent :editor="tiptap" class="paper-content" />
     </div>
   </div>
 </template>
@@ -182,25 +180,12 @@ watch(() => store.filePath, () => {
   color: #4fc3f7;
 }
 
-/* ── Paper scroll area ── */
-.paper-scroll {
+/* ── Content area ── */
+.content-area {
   flex: 1;
   overflow-y: auto;
-  background: #282828;
-  display: flex;
-  justify-content: center;
-  padding: 40px 24px 80px;
-}
-
-.paper {
-  width: 100%;
-  max-width: 680px;
   background: #faf9f7;
-  color: #1a1a1a;
-  padding: 72px 80px;
-  border-radius: 2px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
-  min-height: 900px;
+  padding: 40px 48px;
 }
 </style>
 
@@ -212,6 +197,8 @@ watch(() => store.filePath, () => {
   font-size: 17px;
   line-height: 1.85;
   color: #1a1a1a;
+  width: 100%;
+  min-height: calc(100vh - 120px);
 }
 
 .paper-content .ProseMirror > * + * {

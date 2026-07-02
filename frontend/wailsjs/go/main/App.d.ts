@@ -18,6 +18,8 @@ export function GetRecentProjects():Promise<Array<main.RecentProject>>;
 
 export function OpenFolder():Promise<string>;
 
+export function PrecompileToLatex(arg1:string,arg2:string,arg3:string):Promise<string>;
+
 export function QuitApp():Promise<void>;
 
 export function ReadDirectory(arg1:string):Promise<Array<main.FileNode>>;

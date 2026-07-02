@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strings"
 
+	"luz-writer/internal/latex"
+
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -248,4 +250,29 @@ func (a *App) SaveFile(filePath, content string) error {
 
 func (a *App) QuitApp() {
 	runtime.Quit(a.ctx)
+}
+
+// PrecompileToLatex parses a .luztxt JSON document and writes a .tex file
+// inside {projectPath}/.tmp/latex/, returning the output path on success.
+func (a *App) PrecompileToLatex(projectPath, filePath, content string) (string, error) {
+	latexContent, err := latex.Parse(content)
+	if err != nil {
+		return "", fmt.Errorf("erro ao parsear o documento: %w", err)
+	}
+
+	outDir := filepath.Join(projectPath, ".tmp", "latex")
+	if err := os.MkdirAll(outDir, 0o755); err != nil {
+		return "", fmt.Errorf("não foi possível criar a pasta de saída: %w", err)
+	}
+
+	base := filepath.Base(filePath)
+	ext := filepath.Ext(base)
+	texName := base[:len(base)-len(ext)] + ".tex"
+	outPath := filepath.Join(outDir, texName)
+
+	if err := os.WriteFile(outPath, []byte(latexContent), 0o644); err != nil {
+		return "", fmt.Errorf("não foi possível escrever o arquivo LaTeX: %w", err)
+	}
+
+	return outPath, nil
 }

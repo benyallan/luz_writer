@@ -34,6 +34,10 @@ export function OpenFolder() {
   return window['go']['main']['App']['OpenFolder']();
 }
 
+export function PrecompileToLatex(arg1, arg2, arg3) {
+  return window['go']['main']['App']['PrecompileToLatex'](arg1, arg2, arg3);
+}
+
 export function QuitApp() {
   return window['go']['main']['App']['QuitApp']();
 }

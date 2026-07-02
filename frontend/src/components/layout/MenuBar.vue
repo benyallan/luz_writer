@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
@@ -12,11 +12,15 @@ import {
   DropdownMenuSubContent,
 } from 'reka-ui'
 import { ChevronRight } from '@lucide/vue'
-import { QuitApp, GetRecentProjects, ClearRecentProjects } from '@wails/go/main/App'
+import { QuitApp, GetRecentProjects, ClearRecentProjects, PrecompileToLatex } from '@wails/go/main/App'
 import { useWorkspaceStore } from '@/stores/workspace'
+import { useEditorStore } from '@/stores/editor'
 
 const workspace = useWorkspaceStore()
+const editor = useEditorStore()
 const recentProjects = ref([])
+
+// ── Arquivo ───────────────────────────────────────────────────────────────────
 
 async function onArquivoOpen(open) {
   if (open) {
@@ -37,10 +41,36 @@ function parentDir(fullPath) {
   const parent = fullPath.split('/').slice(0, -1).join('/') || '/'
   return parent.replace(/^\/home\/[^/]+/, '~')
 }
+
+// ── Compilar ──────────────────────────────────────────────────────────────────
+
+const canCompile = computed(() =>
+  !!(workspace.rootPath && editor.filePath && editor.fileName?.endsWith('.luztxt'))
+)
+
+const toast = ref({ show: false, message: '', type: 'success' })
+let toastTimer = null
+
+function showToast(message, type = 'success') {
+  if (toastTimer) clearTimeout(toastTimer)
+  toast.value = { show: true, message, type }
+  toastTimer = setTimeout(() => { toast.value.show = false }, 4000)
+}
+
+async function precompileToLatex() {
+  if (!canCompile.value) return
+  try {
+    const outPath = await PrecompileToLatex(workspace.rootPath, editor.filePath, editor.content)
+    showToast(`LaTeX gerado em: ${outPath}`, 'success')
+  } catch (err) {
+    showToast(`Erro: ${err}`, 'error')
+  }
+}
 </script>
 
 <template>
   <nav class="menubar">
+    <!-- ── Arquivo ── -->
     <DropdownMenuRoot @update:open="onArquivoOpen">
       <DropdownMenuTrigger as-child>
         <button class="menubar-btn">Arquivo</button>
@@ -96,6 +126,35 @@ function parentDir(fullPath) {
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
+
+    <!-- ── Compilar ── -->
+    <DropdownMenuRoot>
+      <DropdownMenuTrigger as-child>
+        <button class="menubar-btn">Compilar</button>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent class="menu-content" :side-offset="0" align="start">
+
+          <DropdownMenuItem
+            class="menu-item"
+            :disabled="!canCompile"
+            @click="precompileToLatex"
+          >
+            Pré-compilar para LaTeX
+          </DropdownMenuItem>
+
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+
+    <!-- Toast de notificação -->
+    <Teleport to="body">
+      <Transition name="toast">
+        <div v-if="toast.show" class="compile-toast" :class="'toast-' + toast.type">
+          {{ toast.message }}
+        </div>
+      </Transition>
+    </Teleport>
   </nav>
 </template>
 
@@ -153,6 +212,12 @@ function parentDir(fullPath) {
 .menu-item[data-highlighted] {
   background: var(--color-accent);
   color: #fff;
+}
+
+.menu-item[data-disabled] {
+  color: var(--color-text-muted);
+  cursor: default;
+  pointer-events: none;
 }
 
 /* SubTrigger keeps highlight when submenu is open */
@@ -245,5 +310,42 @@ function parentDir(fullPath) {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Toast ── */
+.compile-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 480px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  word-break: break-all;
+}
+
+.toast-success {
+  background: #1e3a2f;
+  border: 1px solid #2ea05a;
+  color: #7ee8a2;
+}
+
+.toast-error {
+  background: #3a1e1e;
+  border: 1px solid #a02e2e;
+  color: #e87e7e;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: opacity 0.2s, transform 0.2s;
+}
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
 }
 </style>

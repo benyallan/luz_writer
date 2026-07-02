@@ -1,0 +1,222 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1782998680.3796568,
+    "ast_hash": "e51077b6a7f1f67afc748f1a32a1557d",
+    "semantic_hash": "e51077b6a7f1f67afc748f1a32a1557d"
+  },
+  "app.go": {
+    "mtime": 1782868501.722237,
+    "ast_hash": "6c012a3e767fdb2b570e6e1b3850a6bf",
+    "semantic_hash": "6c012a3e767fdb2b570e6e1b3850a6bf"
+  },
+  "frontend/package.json": {
+    "mtime": 1782835136.627799,
+    "ast_hash": "dfa02db09858d03fe0784bb51087da69",
+    "semantic_hash": "dfa02db09858d03fe0784bb51087da69"
+  },
+  "frontend/src/App.vue": {
+    "mtime": 1782997432.2086406,
+    "ast_hash": "7ee0ddae5c5f9a522e2e747c1eae21e3",
+    "semantic_hash": "7ee0ddae5c5f9a522e2e747c1eae21e3"
+  },
+  "frontend/src/components/HelloWorld.vue": {
+    "mtime": 1782834427.156999,
+    "ast_hash": "24b438390b9337054f0b751954e52667",
+    "semantic_hash": "24b438390b9337054f0b751954e52667"
+  },
+  "frontend/src/components/dialogs/NewProjectDialog.vue": {
+    "mtime": 1782835678.0318415,
+    "ast_hash": "52f612777631d3e331f8786f3b37b3d9",
+    "semantic_hash": "52f612777631d3e331f8786f3b37b3d9"
+  },
+  "frontend/src/components/editor/FileEditor.vue": {
+    "mtime": 1782862721.1412961,
+    "ast_hash": "1c746f447ab9ad127f6b971e3a075a14",
+    "semantic_hash": "1c746f447ab9ad127f6b971e3a075a14"
+  },
+  "frontend/src/components/editor/RichTextEditor.vue": {
+    "mtime": 1782865146.450654,
+    "ast_hash": "fe600415672dfa347cb654308f8ee0b1",
+    "semantic_hash": "fe600415672dfa347cb654308f8ee0b1"
+  },
+  "frontend/src/components/layout/MenuBar.vue": {
+    "mtime": 1782868554.6566553,
+    "ast_hash": "2c5e77f5d78ea7dd1ce7c4b453cf1b9b",
+    "semantic_hash": "2c5e77f5d78ea7dd1ce7c4b453cf1b9b"
+  },
+  "frontend/src/components/layout/Sidebar.vue": {
+    "mtime": 1782837034.3357196,
+    "ast_hash": "a4565ee5525ee8433a4c0a044677f5ad",
+    "semantic_hash": "a4565ee5525ee8433a4c0a044677f5ad"
+  },
+  "frontend/src/components/sidebar/FileTree.vue": {
+    "mtime": 1782835232.7954524,
+    "ast_hash": "f9ee55ebf1ecd46dffb395c51c8a89b5",
+    "semantic_hash": "f9ee55ebf1ecd46dffb395c51c8a89b5"
+  },
+  "frontend/src/components/sidebar/FileTreeNode.vue": {
+    "mtime": 1782862329.5345008,
+    "ast_hash": "1b2b6a32eba0e78d7a2c49d41b25de0a",
+    "semantic_hash": "1b2b6a32eba0e78d7a2c49d41b25de0a"
+  },
+  "frontend/src/main.js": {
+    "mtime": 1782835186.3349152,
+    "ast_hash": "b2a091ba820e89a2b85f60d6fa693834",
+    "semantic_hash": "b2a091ba820e89a2b85f60d6fa693834"
+  },
+  "frontend/src/stores/editor.js": {
+    "mtime": 1782862671.032694,
+    "ast_hash": "ef79b9f5bfc7da7008f9b27448a8cc8c",
+    "semantic_hash": "ef79b9f5bfc7da7008f9b27448a8cc8c"
+  },
+  "frontend/src/stores/workspace.js": {
+    "mtime": 1782836792.6663027,
+    "ast_hash": "7fb608270736ac593abaa695135931a2",
+    "semantic_hash": "7fb608270736ac593abaa695135931a2"
+  },
+  "frontend/vite.config.js": {
+    "mtime": 1782835175.8030198,
+    "ast_hash": "87433fcafbab64ca4844bb2ff30b002c",
+    "semantic_hash": "87433fcafbab64ca4844bb2ff30b002c"
+  },
+  "frontend/wailsjs/go/main/App.d.ts": {
+    "mtime": 1782997423.7557588,
+    "ast_hash": "c9bdc49bac33b531551a56ef0baf3605",
+    "semantic_hash": "c9bdc49bac33b531551a56ef0baf3605"
+  },
+  "frontend/wailsjs/go/main/App.js": {
+    "mtime": 1782997423.7557588,
+    "ast_hash": "196a2fed517664a5d423fbaa85ea12be",
+    "semantic_hash": "196a2fed517664a5d423fbaa85ea12be"
+  },
+  "frontend/wailsjs/go/models.ts": {
+    "mtime": 1782997423.7557588,
+    "ast_hash": "bd0f8b5b1678ea86602af2154704d9c5",
+    "semantic_hash": "bd0f8b5b1678ea86602af2154704d9c5"
+  },
+  "frontend/wailsjs/runtime/package.json": {
+    "mtime": 1782997423.756478,
+    "ast_hash": "a79e9c39ebcda0fdeb14a44939bc489e",
+    "semantic_hash": "a79e9c39ebcda0fdeb14a44939bc489e"
+  },
+  "frontend/wailsjs/runtime/runtime.d.ts": {
+    "mtime": 1782997423.756478,
+    "ast_hash": "51223d7fcb4565ba83c3189c4d0d4741",
+    "semantic_hash": "51223d7fcb4565ba83c3189c4d0d4741"
+  },
+  "frontend/wailsjs/runtime/runtime.js": {
+    "mtime": 1782997423.756478,
+    "ast_hash": "ea97d950ea613027c57b07768f04c393",
+    "semantic_hash": "ea97d950ea613027c57b07768f04c393"
+  },
+  "go.mod": {
+    "mtime": 1782834427.3225102,
+    "ast_hash": "1d42863935b99f100579ee9d1a0d3c77",
+    "semantic_hash": "1d42863935b99f100579ee9d1a0d3c77"
+  },
+  "internal/latex/parser.go": {
+    "mtime": 1782867545.4957602,
+    "ast_hash": "d16cbd858a7c5bbb4fc2ba08dec73242",
+    "semantic_hash": "d16cbd858a7c5bbb4fc2ba08dec73242"
+  },
+  "internal/latex/parser_test.go": {
+    "mtime": 1782867594.2172208,
+    "ast_hash": "965618e94d2703cda0a85453738e3233",
+    "semantic_hash": "965618e94d2703cda0a85453738e3233"
+  },
+  "main.go": {
+    "mtime": 1782835256.1187181,
+    "ast_hash": "8d51e38dc418b655dd4f6543667da6e9",
+    "semantic_hash": "8d51e38dc418b655dd4f6543667da6e9"
+  },
+  "wails.json": {
+    "mtime": 1782834427.1562488,
+    "ast_hash": "ae107494e7e297fe7b19449befbaf8a3",
+    "semantic_hash": "ae107494e7e297fe7b19449befbaf8a3"
+  },
+  ".claude/CLAUDE.md": {
+    "mtime": 1782998680.3788326,
+    "ast_hash": "9b31786b637be3c13978bec4c2330752",
+    "semantic_hash": "9b31786b637be3c13978bec4c2330752"
+  },
+  ".claude/commands/project-overview.md": {
+    "mtime": 1782861941.66863,
+    "ast_hash": "40910d10f6830eb066cb891e74631fb8",
+    "semantic_hash": "40910d10f6830eb066cb891e74631fb8"
+  },
+  ".claude/skills/graphify/SKILL.md": {
+    "mtime": 1782998680.3786461,
+    "ast_hash": "1e48e0226c5b26741c54209a51c94454",
+    "semantic_hash": "1e48e0226c5b26741c54209a51c94454"
+  },
+  ".claude/skills/graphify/references/add-watch.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "d59d027fe449f06aa03905a01184e779",
+    "semantic_hash": "d59d027fe449f06aa03905a01184e779"
+  },
+  ".claude/skills/graphify/references/exports.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "9da2a2152e60a22f07f05fed5158f287",
+    "semantic_hash": "9da2a2152e60a22f07f05fed5158f287"
+  },
+  ".claude/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "42fef56a01698118f7fd722acdadea34",
+    "semantic_hash": "42fef56a01698118f7fd722acdadea34"
+  },
+  ".claude/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": "cde13df085e4c492aeb7ba298a996d0d"
+  },
+  ".claude/skills/graphify/references/hooks.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
+    "semantic_hash": "3f545db6ce646650bb9de588f5512a27"
+  },
+  ".claude/skills/graphify/references/query.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "9e5aadc2c57ab561bc56600fcfa70735",
+    "semantic_hash": "9e5aadc2c57ab561bc56600fcfa70735"
+  },
+  ".claude/skills/graphify/references/transcribe.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "67b6a5fa6c0974e18f60db9f8932fbd8",
+    "semantic_hash": "67b6a5fa6c0974e18f60db9f8932fbd8"
+  },
+  ".claude/skills/graphify/references/update.md": {
+    "mtime": 1782998506.8092742,
+    "ast_hash": "c698309979460d0f02ba616417844399",
+    "semantic_hash": "c698309979460d0f02ba616417844399"
+  },
+  "CLAUDE.md": {
+    "mtime": 1782998680.3794868,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": "82efb97a359f5c7290bf2513d14686be"
+  },
+  "README.md": {
+    "mtime": 1782834427.1562884,
+    "ast_hash": "a0cc7b611ffceb6bd2f3fa700b0cc52d",
+    "semantic_hash": "a0cc7b611ffceb6bd2f3fa700b0cc52d"
+  },
+  "frontend/README.md": {
+    "mtime": 1782834427.1562884,
+    "ast_hash": "ed2b8108c67cb45bed6483f5f71c9435",
+    "semantic_hash": "ed2b8108c67cb45bed6483f5f71c9435"
+  },
+  "frontend/index.html": {
+    "mtime": 1782834427.155999,
+    "ast_hash": "da71f9d2aa1076da34a04ec152aa68b9",
+    "semantic_hash": "da71f9d2aa1076da34a04ec152aa68b9"
+  },
+  "frontend/src/assets/fonts/OFL.txt": {
+    "mtime": 1782834427.1562884,
+    "ast_hash": "4e3d9becbf87c0341298fadf87ae4d36",
+    "semantic_hash": "4e3d9becbf87c0341298fadf87ae4d36"
+  },
+  "frontend/src/assets/images/logo-universal.png": {
+    "mtime": 1782834427.156999,
+    "ast_hash": "372b01982301039587b4004bd4be0f22",
+    "semantic_hash": "372b01982301039587b4004bd4be0f22"
+  }
+}

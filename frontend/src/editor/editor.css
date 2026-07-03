@@ -1,0 +1,71 @@
+/* Visuais de intenção do "Modo Fluxo" (seção 6.0). O editor mostra
+   INTENÇÃO, não preview: nenhuma regra aqui deve tentar antecipar a
+   tipografia final do PDF. */
+
+.ProseMirror {
+  outline: none;
+  min-height: 60vh;
+}
+
+.ProseMirror p {
+  text-align: justify;
+  margin: 0 0 0.9em;
+  line-height: 1.6;
+}
+
+.ProseMirror blockquote {
+  border-left: 3px solid var(--luz-border);
+  margin: 1em 0;
+  padding-left: 1em;
+  color: var(--luz-fg-muted);
+}
+
+/* CSS canônico da mark luzInlineQuote (seção 6.0) — aspas geradas por CSS,
+   nunca digitadas/armazenadas no conteúdo. */
+.luz-inline-quote {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-style: normal;
+}
+
+.luz-inline-quote::before {
+  content: '\201C';
+  color: #888;
+}
+
+.luz-inline-quote::after {
+  content: '\201D';
+  color: #888;
+}
+
+@media (prefers-color-scheme: dark) {
+  .luz-inline-quote {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* CSS canônico da mark luzLang (seção 6.0). */
+.luz-lang {
+  border-bottom: 1px dotted #888;
+}
+
+.luz-lang::after {
+  content: attr(data-lang);
+  font-size: 0.6em;
+  vertical-align: super;
+  color: #888;
+  margin-left: 2px;
+  text-transform: uppercase;
+}
+
+.luz-soft-hyphen {
+  color: #888;
+  font-size: 0.9em;
+}
+
+/* Visual simplificado da mark luzCustomStyle (seção 6.0): sublinhado
+   pontilhado sutil para distinguir de formatação manual. */
+.luz-custom-style {
+  border-bottom: 1px dotted #888;
+}

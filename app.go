@@ -44,6 +44,13 @@ func (a *App) startup(ctx context.Context) {
 	}
 }
 
+// TectonicAvailable indica se o binário tectonic foi encontrado no PATH na
+// inicialização do app (seção 10) — usado pela Status Bar para mostrar um
+// aviso persistente quando ausente, já que a exportação fica desabilitada.
+func (a *App) TectonicAvailable() bool {
+	return a.tectonicFound
+}
+
 // requireWorkspace garante que um workspace está aberto antes de qualquer
 // operação de projeto/capítulos.
 func (a *App) requireWorkspace() (*workspace.Workspace, error) {

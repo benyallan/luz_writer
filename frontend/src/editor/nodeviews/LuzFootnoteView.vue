@@ -55,7 +55,10 @@ function commit() {
   color: var(--luz-fg);
 }
 
-.luz-footnote__popover {
+/* :global() porque o PopoverContent do Reka UI é teleportado — <style
+   scoped> não alcança conteúdo dentro do Teleport (o atributo de escopo do
+   Vue cai no wrapper de posicionamento, não neste elemento). */
+:global(.luz-footnote__popover) {
   background: var(--luz-bg-editor);
   border: 1px solid var(--luz-border);
   border-radius: 6px;
@@ -63,7 +66,7 @@ function commit() {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.luz-footnote__popover textarea {
+:global(.luz-footnote__popover textarea) {
   width: 240px;
   padding: 6px;
   border-radius: 4px;

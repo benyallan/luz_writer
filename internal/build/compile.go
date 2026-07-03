@@ -96,18 +96,40 @@ func Compile(ws *workspace.Workspace, onProgress func(model.BuildProgress)) (mod
 
 	report("compiling", 50)
 
+	// Checado aqui (não só na inicialização do app) porque CheckTectonic()
+	// extrai a cópia embutida sob demanda (seção 10) — resolve o caminho de
+	// verdade a usar em vez de depender do "tectonic" bare estar no PATH, o
+	// que falharia sem nenhuma pista em processos com PATH restrito.
+	found, tectonicPath := CheckTectonic()
+	if !found {
+		return model.BuildResult{
+			Success: false,
+			Problems: append(problems, model.Problem{
+				Severity: "error",
+				Code:     "TECTONIC",
+				Message:  "O binário 'tectonic' não foi encontrado — a exportação está desabilitada até ele ficar acessível para o Luz Writer.",
+				Source:   "project",
+			}),
+			LogTail: "tectonic não encontrado (nem embutido, nem no PATH).",
+		}, nil
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), compileTimeout)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, "tectonic", "-o", "dist", filepath.Join(".tmp", "main.tex"))
+	cmd := exec.CommandContext(ctx, tectonicPath, "-o", "dist", filepath.Join(".tmp", "main.tex"))
 	cmd.Dir = ws.Root
 	output, runErr := cmd.CombinedOutput()
 
 	if runErr != nil {
+		logTail := tailLines(string(output), 40)
+		if logTail == "" {
+			logTail = runErr.Error()
+		}
 		return model.BuildResult{
 			Success:  false,
 			Problems: problems,
-			LogTail:  tailLines(string(output), 40),
+			LogTail:  logTail,
 		}, nil
 	}
 

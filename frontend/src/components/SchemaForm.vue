@@ -227,21 +227,6 @@ function setDimension(field: model.FormField, amount: string, unit: string) {
   min-width: 160px;
 }
 
-.select-content {
-  background: var(--luz-bg-editor);
-  border: 1px solid var(--luz-border);
-  border-radius: 6px;
-  padding: 4px;
-}
-
-.select-item {
-  padding: 6px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  outline: none;
-}
-
-.select-item[data-highlighted] {
-  background: var(--luz-bg-hover);
-}
+/* .select-content/.select-item vivem em style.css (global) — ver comentário
+   lá: conteúdo teleportado pelo Reka UI não é alcançado por <style scoped>. */
 </style>

@@ -56,38 +56,44 @@ function insertSoftHyphen() {
 // O Reka UI devolve o foco ao botão-gatilho do dropdown ao fechá-lo, depois
 // do @select disparar — adiar com setTimeout(0) garante que o .focus() do
 // Tiptap rode por último e vença essa corrida, preservando o cursor no
-// editor para o usuário continuar digitando.
-function afterDropdownClose(fn: () => void) {
-  setTimeout(fn, 0)
+// editor para o usuário continuar digitando. Mas a mesma corrida também
+// pode perder a SELEÇÃO original (ex.: um trecho de texto selecionado para
+// marcar como outro idioma) — por isso capturamos {from, to} de imediato,
+// antes do setTimeout, e restauramos explicitamente com setTextSelection()
+// dentro do callback adiado, em vez de confiar na seleção "atual" nesse
+// momento (que pode já ter colapsado).
+function afterDropdownClose(fn: (range: {from: number; to: number}) => void) {
+  const {from, to} = props.editor.state.selection
+  setTimeout(() => fn({from, to}), 0)
 }
 
 function insertVariable(name: string) {
-  afterDropdownClose(() => {
-    props.editor.chain().focus().insertContent({type: 'luzVariable', attrs: {name}}).run()
+  afterDropdownClose(({from, to}) => {
+    props.editor.chain().focus().setTextSelection({from, to}).insertContent({type: 'luzVariable', attrs: {name}}).run()
   })
 }
 
 function setLang(lang: string) {
-  afterDropdownClose(() => {
-    props.editor.chain().focus().setMark('luzLang', {lang}).run()
+  afterDropdownClose(({from, to}) => {
+    props.editor.chain().focus().setTextSelection({from, to}).setMark('luzLang', {lang}).run()
   })
 }
 
 function clearLang() {
-  afterDropdownClose(() => {
-    props.editor.chain().focus().unsetMark('luzLang').run()
+  afterDropdownClose(({from, to}) => {
+    props.editor.chain().focus().setTextSelection({from, to}).unsetMark('luzLang').run()
   })
 }
 
 function setCustomStyle(styleId: string) {
-  afterDropdownClose(() => {
-    props.editor.chain().focus().setMark('luzCustomStyle', {styleId}).run()
+  afterDropdownClose(({from, to}) => {
+    props.editor.chain().focus().setTextSelection({from, to}).setMark('luzCustomStyle', {styleId}).run()
   })
 }
 
 function clearCustomStyle() {
-  afterDropdownClose(() => {
-    props.editor.chain().focus().unsetMark('luzCustomStyle').run()
+  afterDropdownClose(({from, to}) => {
+    props.editor.chain().focus().setTextSelection({from, to}).unsetMark('luzCustomStyle').run()
   })
 }
 
@@ -214,24 +220,7 @@ const customStylesEnabled = computed(() => pluginsStore.isPluginEnabled('customS
   margin: 0 4px;
 }
 
-.toolbar-menu {
-  background: var(--luz-bg-editor);
-  border: 1px solid var(--luz-border);
-  border-radius: 6px;
-  padding: 4px;
-  min-width: 160px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.toolbar-menu__item {
-  padding: 6px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.82rem;
-  outline: none;
-}
-
-.toolbar-menu__item[data-highlighted] {
-  background: var(--luz-bg-hover);
-}
+/* .toolbar-menu/.toolbar-menu__item vivem em style.css (global) — ver
+   comentário lá: conteúdo teleportado pelo Reka UI não é alcançado por
+   <style scoped>. */
 </style>

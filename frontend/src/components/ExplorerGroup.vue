@@ -196,24 +196,7 @@ function commitRename(id: string) {
   color: #c0392b;
 }
 
-.toolbar-menu {
-  background: var(--luz-bg-editor);
-  border: 1px solid var(--luz-border);
-  border-radius: 6px;
-  padding: 4px;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.toolbar-menu__item {
-  padding: 6px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.82rem;
-  outline: none;
-}
-
-.toolbar-menu__item[data-highlighted] {
-  background: var(--luz-bg-hover);
-}
+/* .toolbar-menu/.toolbar-menu__item vivem em style.css (global) — ver
+   comentário lá: conteúdo teleportado pelo Reka UI não é alcançado por
+   <style scoped>. */
 </style>

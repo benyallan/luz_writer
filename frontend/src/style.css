@@ -49,3 +49,45 @@ body {
 #app {
     height: 100vh;
 }
+
+/* Conteúdo "popper" do Reka UI (Popover/Select/DropdownMenu/ContextMenu)
+   é montado via Teleport, e o <style scoped> dos componentes Vue não
+   alcança esse conteúdo (o atributo de escopo cai no wrapper de
+   posicionamento que o Reka UI injeta, não no elemento com a classe) —
+   por isso essas classes, compartilhadas entre vários componentes, vivem
+   aqui como CSS global em vez de scoped. Ver DialogContent/DialogOverlay,
+   que não usam esse wrapper e por isso continuam scoped normalmente. */
+.select-content,
+.toolbar-menu {
+    background: var(--luz-bg-editor);
+    border: 1px solid var(--luz-border);
+    border-radius: 6px;
+    padding: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.select-content {
+    min-width: 160px;
+}
+
+.toolbar-menu {
+    min-width: 180px;
+}
+
+.select-item,
+.toolbar-menu__item {
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    color: var(--luz-fg);
+}
+
+.toolbar-menu__item {
+    font-size: 0.82rem;
+}
+
+.select-item[data-highlighted],
+.toolbar-menu__item[data-highlighted] {
+    background: var(--luz-bg-hover);
+}

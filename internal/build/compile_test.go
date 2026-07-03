@@ -225,3 +225,69 @@ func TestCompile_TectonicFailureReturnsLogTailWithoutError(t *testing.T) {
 		t.Error("esperava LogTail preenchido")
 	}
 }
+
+// TestCompile_TectonicNotFoundReturnsClearProblem cobre o cenário que
+// motivou o Problem code=TECTONIC: sem o binário embutido disponível (ex.:
+// plataforma sem cópia embutida ainda) e sem tectonic no PATH, a exportação
+// falhava com Success=false e LogTail vazio, sem nenhuma pista para o
+// usuário do motivo. Força o modo "só sistema" para não depender de haver
+// (ou não) um binário embutido nesta plataforma.
+func TestCompile_TectonicNotFoundReturnsClearProblem(t *testing.T) {
+	withSystemTectonicOnly(t)
+	t.Setenv("PATH", t.TempDir()) // diretório vazio: tectonic não pode ser encontrado
+
+	root := t.TempDir()
+	if _, err := workspace.Create(root, "Sem Tectonic", "Autor", "pt-BR"); err != nil {
+		t.Fatalf("Create: %v", err)
+	}
+	w := &workspace.Workspace{Root: root}
+	ch, err := w.CreateChapter("Capítulo", model.RoleChapter)
+	if err != nil {
+		t.Fatalf("CreateChapter: %v", err)
+	}
+	must(t, w.SaveChapter(ch.ID, `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Texto."}]}]}`))
+
+	result, err := Compile(w, nil)
+	if err != nil {
+		t.Fatalf("Compile não deveria retornar erro Go: %v", err)
+	}
+	if result.Success {
+		t.Fatal("esperava falha de compilação sem tectonic no PATH")
+	}
+	if result.LogTail == "" {
+		t.Error("esperava LogTail preenchido explicando a ausência do tectonic, não vazio")
+	}
+	found := false
+	for _, p := range result.Problems {
+		if p.Code == "TECTONIC" {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("esperava um Problem com Code=TECTONIC, got %v", result.Problems)
+	}
+}
+
+// TestCompile_WorksWithEmbeddedTectonicAndEmptyPath é o teste que valida a
+// promessa de autonomia (seção 10): mesmo sem NENHUM tectonic no PATH do
+// processo, a compilação deve funcionar usando só o binário embutido.
+func TestCompile_WorksWithEmbeddedTectonicAndEmptyPath(t *testing.T) {
+	if len(embeddedTectonic) == 0 {
+		t.Skip("sem binário embutido nesta plataforma")
+	}
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("XDG_CACHE_HOME", "")
+	t.Setenv("PATH", "")
+
+	w := setupCompileWorkspace(t)
+	result, err := Compile(w, nil)
+	if err != nil {
+		t.Fatalf("Compile não deveria retornar erro Go: %v", err)
+	}
+	if !result.Success {
+		t.Fatalf("esperava sucesso usando o binário embutido, got LogTail:\n%s", result.LogTail)
+	}
+	if _, err := os.Stat(result.OutputPath); err != nil {
+		t.Fatalf("PDF não encontrado em %s: %v", result.OutputPath, err)
+	}
+}

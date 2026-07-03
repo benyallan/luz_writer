@@ -36,6 +36,7 @@ function handleRejection(e: PromiseRejectionEvent) {
 
 onMounted(() => {
   workspace.restoreLastWorkspace()
+  buildStore.checkTectonic()
 })
 
 // Atalhos de teclado (seção 12, Etapa 6): Ctrl/Cmd+S salva o capítulo aberto

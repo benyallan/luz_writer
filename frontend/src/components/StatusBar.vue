@@ -46,6 +46,10 @@ const problemsLabel = computed(() => {
   if (problemsStore.items.length) return `⚠ ${problemsStore.items.length} aviso(s)`
   return '✓ Sem problemas'
 })
+
+// Seção 10: ausência do tectonic nunca trava o app, só desabilita a
+// exportação — sinalizado aqui de forma persistente (não some sozinho).
+const tectonicMissing = computed(() => buildStore.tectonicAvailable === false)
 </script>
 
 <template>
@@ -74,11 +78,14 @@ const problemsLabel = computed(() => {
       {{ editorStore.activeChapterMeta.wordCount }} palavras
     </span>
     <span v-if="editorStore.activeChapterId" class="status-bar__item">{{ saveLabel }}</span>
+    <span v-if="tectonicMissing" class="status-bar__item status-bar__item--error" title="Instale o Tectonic e reinicie o Luz Writer para habilitar a exportação">
+      ✗ Tectonic não encontrado — exportação desabilitada
+    </span>
     <button
       class="status-bar__export"
       type="button"
-      :disabled="buildStore.compiling || problemsStore.hasErrors"
-      :title="problemsStore.hasErrors ? 'Corrija os erros no painel Problems antes de exportar' : 'Ctrl/Cmd+E'"
+      :disabled="buildStore.compiling || problemsStore.hasErrors || tectonicMissing"
+      :title="problemsStore.hasErrors ? 'Corrija os erros no painel Problems antes de exportar' : tectonicMissing ? 'Tectonic não encontrado' : 'Ctrl/Cmd+E'"
       @click="buildStore.compile()"
     >
       {{ exportLabel }}
@@ -119,7 +126,10 @@ const problemsLabel = computed(() => {
   text-decoration: underline;
 }
 
-.status-bar__target-menu {
+/* :global() porque o DropdownMenuContent do Reka UI é teleportado — <style
+   scoped> não alcança conteúdo dentro do Teleport (o atributo de escopo do
+   Vue cai no wrapper de posicionamento, não nestes elementos). */
+:global(.status-bar__target-menu) {
   background: var(--luz-bg-editor);
   border: 1px solid var(--luz-border);
   border-radius: 6px;
@@ -128,7 +138,7 @@ const problemsLabel = computed(() => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.status-bar__target-menu-item {
+:global(.status-bar__target-menu-item) {
   padding: 6px 8px;
   border-radius: 4px;
   cursor: pointer;
@@ -136,7 +146,7 @@ const problemsLabel = computed(() => {
   outline: none;
 }
 
-.status-bar__target-menu-item[data-highlighted] {
+:global(.status-bar__target-menu-item[data-highlighted]) {
   background: var(--luz-bg-hover);
 }
 

@@ -54,4 +54,6 @@ export function SetActiveTarget(arg1:string):Promise<void>;
 
 export function SetPluginEnabled(arg1:string,arg2:boolean):Promise<void>;
 
+export function TectonicAvailable():Promise<boolean>;
+
 export function Validate():Promise<Array<model.Problem>>;

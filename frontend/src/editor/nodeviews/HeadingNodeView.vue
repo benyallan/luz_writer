@@ -96,7 +96,10 @@ function setAttr(key: string, event: Event) {
   outline: none;
 }
 
-.luz-heading__popover {
+/* :global() porque o PopoverContent do Reka UI é teleportado — <style
+   scoped> não alcança conteúdo dentro do Teleport (o atributo de escopo do
+   Vue cai no wrapper de posicionamento, não nestes elementos). */
+:global(.luz-heading__popover) {
   background: var(--luz-bg-editor);
   border: 1px solid var(--luz-border);
   border-radius: 6px;
@@ -108,7 +111,7 @@ function setAttr(key: string, event: Event) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.luz-heading__option {
+:global(.luz-heading__option) {
   display: flex;
   align-items: center;
   gap: 6px;

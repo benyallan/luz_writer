@@ -84,7 +84,10 @@ function commitWidth() {
   text-align: center;
 }
 
-.luz-image__popover {
+/* :global() porque o PopoverContent do Reka UI é teleportado — <style
+   scoped> não alcança conteúdo dentro do Teleport (o atributo de escopo do
+   Vue cai no wrapper de posicionamento, não nestes elementos). */
+:global(.luz-image__popover) {
   background: var(--luz-bg-editor);
   border: 1px solid var(--luz-border);
   border-radius: 6px;
@@ -97,13 +100,13 @@ function commitWidth() {
   width: 220px;
 }
 
-.luz-image__field {
+:global(.luz-image__field) {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-.luz-image__field input {
+:global(.luz-image__field input) {
   padding: 4px 6px;
   border-radius: 4px;
   border: 1px solid var(--luz-border);

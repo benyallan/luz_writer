@@ -307,9 +307,19 @@ async function createTarget() {
   padding: 4px 6px;
   border-radius: 4px;
   border: 1px solid var(--luz-border);
-  background: transparent;
   color: var(--luz-fg);
   font-size: 0.85rem;
+}
+
+.target-editor__field input {
+  background: transparent;
+}
+
+/* Native <select> não pode ter fundo transparente: no WebKitGTK (Wails no
+   Linux) a lista de opções herda o background do próprio elemento, então
+   "transparent" a torna ilegível contra o que estiver atrás da janela. */
+.target-editor__field select {
+  background: var(--luz-bg-editor);
 }
 
 .target-editor__modules {
@@ -399,23 +409,8 @@ async function createTarget() {
   cursor: pointer;
 }
 
-.select-content {
-  background: var(--luz-bg-editor);
-  border: 1px solid var(--luz-border);
-  border-radius: 6px;
-  padding: 4px;
-}
-
-.select-item {
-  padding: 6px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  outline: none;
-}
-
-.select-item[data-highlighted] {
-  background: var(--luz-bg-hover);
-}
+/* .select-content/.select-item vivem em style.css (global) — ver comentário
+   lá: conteúdo teleportado pelo Reka UI não é alcançado por <style scoped>. */
 
 .welcome__button {
   padding: 6px 14px;

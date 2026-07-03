@@ -10,6 +10,13 @@ export const useBuildStore = defineStore('build', () => {
   const percent = ref(0)
   const compiling = ref(false)
   const lastResult = ref<model.BuildResult | null>(null)
+  // null enquanto não checado ainda (evita mostrar o aviso por um instante
+  // antes da primeira resposta do backend).
+  const tectonicAvailable = ref<boolean | null>(null)
+
+  async function checkTectonic() {
+    tectonicAvailable.value = await App.TectonicAvailable()
+  }
 
   EventsOn('luz:build:progress', (p: {stage: string; percent: number}) => {
     stage.value = p.stage
@@ -44,5 +51,5 @@ export const useBuildStore = defineStore('build', () => {
     BrowserOpenURL('file://' + dir)
   }
 
-  return {stage, percent, compiling, lastResult, compile}
+  return {stage, percent, compiling, lastResult, tectonicAvailable, checkTectonic, compile}
 })

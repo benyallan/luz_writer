@@ -106,6 +106,10 @@ export function SetPluginEnabled(arg1, arg2) {
   return window['go']['main']['App']['SetPluginEnabled'](arg1, arg2);
 }
 
+export function TectonicAvailable() {
+  return window['go']['main']['App']['TectonicAvailable']();
+}
+
 export function Validate() {
   return window['go']['main']['App']['Validate']();
 }
